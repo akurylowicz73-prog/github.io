@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>mObywatel 4.0</title>
+
+    <!-- Apply theme immediately to prevent flash -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("theme-preference");
+          var prefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var theme = stored || (prefersDark ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {}
+      })();
+    </script>
+
+    <link rel="preload" href="css/main.css" as="style" />
+    <link rel="preload" href="css/common.css" as="style" />
+    <link rel="preload" href="css/pages/documents.css" as="style" />
+    <link
+      rel="preload"
+      href="assets/fonts/roboto_500_latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="icon.png" />
+    <link rel="stylesheet" href="css/main.css" data-n-g />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/pages/documents.css" />
+    <link rel="stylesheet" href="css/theme.css" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- PWA Gate - enforce mobile + standalone + authenticated -->
+    <script src="js/api-client.js" defer></script>
+    <script src="js/pwa-gate.js" defer></script>
+
+    <script src="js/theme.js" defer></script>
+    <script src="js/header.js" defer></script>
+    <script src="js/navigation.js" defer></script>
+    <script src="js/pages/documents.js" defer></script>
+    <script src="js/protection.js"></script>
+
+    <!-- Service Worker registration -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch((err) => {
+          console.error("SW registration failed:", err);
+        });
+      }
+    </script>
+  </head>
+
+  <body class="dashboard-page">
+    <header class="app-header dashboard-header">
+      <div class="header-left">
+        <div id="inicjaly1">
+          <img
+            src="assets/icons/coi_common_ui_ic_mobywatel_logo.svg"
+            alt="mObywatel"
+          />
+        </div>
+        <span id="header-title" class="header-title">Dokumenty</span>
+      </div>
+      <div class="header-right">
+        <div id="chatbot" aria-label="Asystent" title="Asystent" onclick="window.location.href='assistant.html'" style="cursor: pointer;">
+          <svg
+            class="chatbot-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            role="img"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M10,11C10,11.552 9.552,12 9,12C8.448,12 8,11.552 8,11C8,10.448 8.448,10 9,10C9.552,10 10,10.448 10,11Z"
+            ></path>
+            <path
+              fill="currentColor"
+              d="M15,12C15.552,12 16,11.552 16,11C16,10.448 15.552,10 15,10C14.448,10 14,10.448 14,11C14,11.552 14.448,12 15,12Z"
+            ></path>
+            <path
+              fill="currentColor"
+              fill-rule="evenodd"
+              d="M7.5,3.75C7.5,3.336 7.836,3 8.25,3C8.664,3 9,3.336 9,3.75V5H15V3.75C15,3.336 15.336,3 15.75,3C16.164,3 16.5,3.336 16.5,3.75V5.031C18.225,5.246 19.609,6.56 19.93,8.25H20.5C21.881,8.25 23,9.369 23,10.75V12.25C23,13.631 21.881,14.75 20.5,14.75H19.93C19.579,16.601 17.953,18 16,18H9.657C8.596,18 7.579,18.421 6.828,19.172L5.707,20.293C5.077,20.923 4,20.477 4,19.586V14.75H3.5C2.119,14.75 1,13.631 1,12.25V10.75C1,9.369 2.119,8.25 3.5,8.25H4.07C4.07,8.25 4.07,8.25 4.07,8.25C4.391,6.56 5.775,5.246 7.5,5.031V3.75ZM4,9.75H3.5C2.948,9.75 2.5,10.198 2.5,10.75V12.25C2.5,12.802 2.948,13.25 3.5,13.25H4V9.75ZM20,13.25V9.75H20.5C21.052,9.75 21.5,10.198 21.5,10.75V12.25C21.5,12.802 21.052,13.25 20.5,13.25H20ZM16,6.5H8C6.619,6.5 5.5,7.619 5.5,9V18.379L5.768,18.111C6.799,17.08 8.198,16.5 9.657,16.5H16C17.381,16.5 18.5,15.381 18.5,14V9C18.5,7.619 17.381,6.5 16,6.5Z"
+            ></path>
+          </svg>
+        </div>
+        <div
+          id="dzwonek"
+          aria-label="Powiadomienia"
+          title="Powiadomienia"
+          role="link"
+          tabindex="0"
+          onclick="window.location.href='powiadomienia.html?from=documents'"
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='powiadomienia.html?from=documents'}"
+        >
+          <svg
+            class="notif-bell"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            role="img"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"
+            ></path>
+            <circle
+              id="red-dot"
+              cx="18"
+              cy="6"
+              r="4"
+              fill="#cd291c"
+            ></circle>
+          </svg>
+        </div>
+      </div>
+    </header>    <h2 id="main-title" class="dashboard-section-title dashboard-main-content">
+      Dokumenty
+    </h2>
+<section id="wybor-p">
+  <!-- mDowód -->
+  <a class="id-card" href="dowod.html">
+    <img
+      src="assets/icons/mdowod_bg_big.webp"
+      alt="mDowod"
+      class="id-card-image"
+      loading="eager"
+      decoding="async"
+      width="400"
+      height="240"
+    />
+    <div class="id-card-header">
+      <span class="id-card-title">mDowód</span>
+      <img
+        src="assets/icons/logo_mdowod.svg"
+        alt="Logo mDowodu"
+        class="id-card-logo"
+        loading="eager"
+        width="64"
+        height="64"
+      />
+    </div>
+  </a>
+
+  <!-- Legitka (overlapping) -->
+  <a class="id-card id-card--legitka" href="legitka.html">
+    <img
+      src="assets/icons/legitka.webp"
+      alt="Legitymacja"
+      class="id-card-image"
+      loading="eager"
+      decoding="async"
+      width="400"
+      height="240"
+    />
+      <div class="id-card-header">
+      <span class="id-card-title">Legitymacja szkolna</span>
+      <img
+        src="assets/icons/logo_mdowod.svg"
+        alt="Logo mDowodu"
+        class="id-card-logo"
+        loading="eager"
+        width="64"
+        height="64"
+      />
+      </div>
+  </a>
+
+
+  <div class="dashboard-under-card">
+    <a href="#" class="customize-view-link">Dostosuj widok</a>
+  </div>
+</section>    <button
+      class="floating-add-doc-btn"
+      type="button"
+      aria-label="Dodaj dokument"
+    >
+      <span class="icon-plus" aria-hidden="true">+</span>
+      <span>Dodaj dokument</span>
+    </button>
+    <div class="bottom-nav">
+      <div class="bottom-nav__tab bottom-nav__tab--active">
+        <img src="assets/icons/if006_documents_fill.svg" alt="home.html" />
+        <span class="bottom-nav__active-text">Dokumenty</span>
+      </div>
+      <div
+        class="bottom-nav__tab unfill"
+        onclick="window.location.href='services.html'"
+      >
+        <img src="assets/icons/if002_services.svg" alt="services.html" />
+        <span>Usługi</span>
+      </div>
+      <div
+        class="bottom-nav__tab unfill"
+        onclick="window.location.href='qr.html'"
+      >
+        <img src="assets/icons/if004_scan.svg" alt="qr.html" />
+        <span>Kod QR</span>
+      </div>
+      <div
+        class="bottom-nav__tab unfill"
+        onclick="window.location.href='documents.html'"
+      >
+        <img src="assets/icons/ab023_zoom_in.svg" alt="documents.html" />
+        <span>Szukaj</span>
+      </div>
+
+      <div
+        class="bottom-nav__tab unfill"
+        onclick="window.location.href='more.html'"
+      >
+        <img src="assets/icons/if005_more.svg" alt="more.html" />
+        <span>Więcej</span>
+      </div>
+    </div>
+  </body>
+</html>

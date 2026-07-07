@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Edycja danych dowodu</title>
+
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/pages/profiledata.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Edycja danych</h1>
+      </header>
+
+      <div style="margin: 16px 0; text-align: center">
+        <button type="button" onclick="generateAllData()" style="padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">
+          ✨ Wygeneruj wszystkie dane
+        </button>
+      </div>
+
+      <form id="passport-form" onsubmit="return false;">
+        <div class="photo-container" style="text-align: center; margin-bottom: 20px;">
+          <img id="profileImage" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Zdjęcie profilowe" style="max-width: 150px; display: block; margin: 10px auto; border-radius: 8px; border: 1px solid #ccc;" />
+          <input type="file" id="imageInput" accept="image/*" onchange="previewAndConvertImage(this)" />
+        </div>
+
+        <div class="form-group"><label for="name">Imię (Imiona):</label><input type="text" id="name" name="name" placeholder="JAN" required oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="surname">Nazwisko:</label><input type="text" id="surname" name="surname" placeholder="NOWAK" required oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="nationality">Obywatelstwo:</label><input type="text" id="nationality" name="nationality" placeholder="POLSKIE" required oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="birthDate">Data urodzenia:</label><input type="date" id="birthDate" name="birthDate" required /></div>
+        
+        <div class="form-group">
+          <label for="pesel">PESEL:</label>
+          <div style="display: flex; gap: 8px; align-items: center">
+            <input type="text" id="pesel" name="pesel" placeholder="00000000000" required oninput="convertToUpperCase(this)" style="flex: 1" />
+            <button type="button" onclick="generatePesel()" style="white-space: nowrap; padding: 8px 12px; background: #667eea; color: white; border: none; border-radius: 4px;">🎲 Generuj</button>
+          </div>
+        </div>
+
+        <div class="form-group"><h2>Dane mDowodu</h2></div>
+        <div class="form-group">
+          <label for="idSeriesMain">Seria i numer mDowodu:</label>
+          <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+            <input type="text" id="idSeriesMain" name="idSeriesMain" placeholder="XXXX00000" oninput="convertToUpperCase(this)" style="flex: 1" />
+            <button type="button" onclick="generateMDowodNumber()" style="white-space: nowrap; padding: 8px 12px; background: #667eea; color: white; border: none; border-radius: 4px;">🎲 Generuj</button>
+          </div>
+          <label for="expiryDateMain">Termin ważności mDowodu:</label><input type="date" id="expiryDateMain" name="expiryDateMain" />
+        </div>
+        <div class="form-group"><label for="issueDateMain">Data wydania mDowodu:</label><input type="date" id="issueDateMain" name="issueDateMain" /></div>
+
+        <div class="form-group"><h2>Dane rodziców</h2></div>
+        <div class="form-group"><label for="fathernameMain">Imię ojca:</label><input type="text" id="fathernameMain" name="fathernameMain" placeholder="JAN" oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="mothernameMain">Imię matki:</label><input type="text" id="mothernameMain" name="mothernameMain" placeholder="ANNA" oninput="convertToUpperCase(this)" /></div>
+
+        <div class="form-group"><h2>Dane plastikowego dowodu osobistego</h2></div>
+        <div class="form-group">
+          <label for="idSeries">Seria i numer plastikowego dowodu:</label>
+          <div style="display: flex; gap: 8px; align-items: center">
+            <input type="text" id="idSeries" name="idSeries" placeholder="AAA000000" oninput="convertToUpperCase(this)" style="flex: 1" />
+            <button type="button" onclick="generateDowodNumber()" style="white-space: nowrap; padding: 8px 12px; background: #667eea; color: white; border: none; border-radius: 4px;">🎲 Generuj</button>
+          </div>
+        </div>
+        <div class="form-group"><label for="issuingAuthority">Organ wydający:</label><input type="text" id="issuingAuthority" name="issuingAuthority" placeholder="np. PREZYDENT MIASTA WARSZAWY" oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="expiryDate">Termin ważności plastikowego dowodu:</label><input type="date" id="expiryDate" name="expiryDate" /></div>
+        <div class="form-group"><label for="issueDate">Data wydania plastikowego dowodu:</label><input type="date" id="issueDate" name="issueDate" /></div>
+
+        <div class="form-group"><h2>Twoje dodatkowe dane</h2></div>
+        <div class="form-group"><label for="lastName">Nazwisko rodowe:</label><input type="text" id="lastName" name="lastName" placeholder="NOWAK" oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group">
+          <label for="gender">Płeć:</label>
+          <select id="gender" name="gender">
+            <option value="">-- Wybierz płeć --</option>
+            <option value="MĘŻCZYZNA">MĘŻCZYZNA</option>
+            <option value="KOBIETA">KOBIETA</option>
+          </select>
+        </div>
+        <div class="form-group"><label for="fatherSurname">Nazwisko rodowe ojca:</label><input type="text" id="fatherSurname" name="fatherSurname" placeholder="NOWAK" oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="motherSurname">Nazwisko rodowe matki:</label><input type="text" id="motherSurname" name="motherSurname" placeholder="NOWAK" oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="placeOfBirth">Miejsce urodzenia:</label><input type="text" id="placeOfBirth" name="placeOfBirth" placeholder="WARSZAWA" oninput="convertToUpperCase(this)" /></div>
+        
+        <div class="form-group" id="zameldowanie">
+          <label>Adres zameldowania na pobyt stały:</label>
+          <div class="address-row">
+            <div class="address-col">
+              <label for="address">Adres</label>
+              <input type="text" id="address" name="address" placeholder="UL. PRZYKŁADOWA 00/00" oninput="convertToUpperCase(this)" />
+            </div>
+            <div class="address-col">
+              <label for="postalcode">Kod pocztowy</label>
+              <input type="text" id="postalcode" name="postalcode" placeholder="00-000 WARSZAWA" oninput="convertToUpperCase(this)" />
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group"><label for="registrationDate">Data zameldowania na pobyt stały / Ostatnia aktualizacja:</label><input type="date" id="registrationDate" name="registrationDate" /></div>
+        <div class="form-group"><label for="numerlegitka">Numer Legitki</label><input type="text" id="numerlegitka" name="numerlegitka" placeholder="1234/56" oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="wydanielegitka">Data wydania legitki:</label><input type="date" id="wydanielegitka" name="wydanielegitka" /></div>
+        <div class="form-group"><label for="datalegitka">Termin ważności legitki</label><input type="date" id="datalegitka" name="datalegitka" /></div>
+        <div class="form-group"><label for="nazwaszkola">Nazwa Szkoły:</label><input type="text" id="nazwaszkola" name="nazwaszkola" placeholder="NIE DZIALA" oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="adresszkola">Adres szkoły:</label><input type="text" id="adresszkola" name="adresszkola" placeholder="NIE DZIALA" oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="telszkola">Telefon Szkoły:</label><input type="text" id="telszkola" name="telszkola" placeholder="NIE DZIALA" oninput="convertToUpperCase(this)" /></div>
+        <div class="form-group"><label for="dyrekszkola">Dyrektor szkoły:</label><input type="text" id="dyrekszkola" name="dyrekszkola" placeholder="NIE DZIALA" /></div>
+
+        <div class="buttons">
+          <button type="button" class="save-button" onclick="saveData()">Zapisz</button>
+          <a href="more.html" class="back-button">Powrót</a>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      let currentProfileImageBase64 = "";
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const savedData = localStorage.getItem("neocities_profile_data");
+        if (savedData) {
+          const data = JSON.parse(savedData);
+          
+          const formInputs = [
+            "name", "surname", "nationality", "birthDate", "pesel", 
+            "idSeriesMain", "expiryDateMain", "issueDateMain", "fathernameMain", "mothernameMain", 
+            "idSeries", "issuingAuthority", "expiryDate", "issueDate", 
+            "lastName", "gender", "fatherSurname", "motherSurname", "placeOfBirth", 
+            "address", "postalcode", "registrationDate", "numerlegitka", "wydanielegitka", "datalegitka",
+            "nazwaszkola", "adresszkola", "telszkola", "dyrekszkola"
+          ];
+
+          formInputs.forEach(key => {
+            const element = document.getElementById(key);
+            if (element && data["raw_" + key] !== undefined) {
+              element.value = data["raw_" + key];
+            }
+          });
+
+          if (data.profileImageBase64) {
+            currentProfileImageBase64 = data.profileImageBase64;
+            document.getElementById("profileImage").src = currentProfileImageBase64;
+          }
+        }
+      });
+
+      function previewAndConvertImage(input) {
+        const file = input.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            currentProfileImageBase64 = e.target.result;
+            document.getElementById("profileImage").src = currentProfileImageBase64;
+          };
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function convertToUpperCase(element) {
+        element.value = element.value.toUpperCase();
+      }
+
+      // Poprawione formatowanie daty
+      function formatujDate(isoDate) {
+        if (!isoDate) return "Brak danych";
+        const parts = isoDate.split("-");
+        if (parts.length === 3) return `${parts[2]}.${parts[1]}.${parts[0]}`;
+        return isoDate;
+      }
+
+      // CAŁKOWICIE NAPRAWIONA FUNKCJA ZAPISU (Zsynchronizowana z index.html)
+      function saveData() {
+        const dataObject = {
+          "display-name": document.getElementById("name").value || "Brak danych",
+          "display-surname": document.getElementById("surname").value || "Brak danych",
+          "display-nationality": document.getElementById("nationality").value || "POLSKIE",
+          "display-birthDate": formatujDate(document.getElementById("birthDate").value),
+          "display-pesel": document.getElementById("pesel").value || "Brak danych",
+          
+          "idSeriesMain": document.getElementById("idSeriesMain").value || "Brak danych",
+          "expiryDateMain": formatujDate(document.getElementById("expiryDateMain").value),
+          "issueDateMain": formatujDate(document.getElementById("issueDateMain").value),
+          "fathernameMain": document.getElementById("fathernameMain").value || "Brak danych",
+          "mothernameMain": document.getElementById("mothernameMain").value || "Brak danych",
+          
+          // Klucze poprawione tak, aby odpowiadały dokładnie ID w index.html
+          "lastName": document.getElementById("lastName").value || "Brak danych",
+          "gender": document.getElementById("gender").value || "Brak danych",
+          "fatherSurname": document.getElementById("fatherSurname").value || "Brak danych",
+          "motherSurname": document.getElementById("motherSurname").value || "Brak danych",
+          "placeOfBirth": document.getElementById("placeOfBirth").value || "Brak danych",
+          "address": document.getElementById("address").value || "Brak danych",
+          "postalcode": document.getElementById("postalcode").value || "Brak danych",
+          "registrationDate": formatujDate(document.getElementById("registrationDate").value),
+          
+          "idSeries": document.getElementById("idSeries").value || "Brak danych",
+          "docStatus": "WAŻNY",
+          "issuingAuthority": document.getElementById("issuingAuthority").value || "Brak danych",
+          "expiryDate": formatujDate(document.getElementById("expiryDate").value),
+          "issueDate": formatujDate(document.getElementById("issueDate").value),
+          
+          "profileImageBase64": currentProfileImageBase64
+        };
+
+        const formInputs = [
+          "name", "surname", "nationality", "birthDate", "pesel", 
+          "idSeriesMain", "expiryDateMain", "issueDateMain", "fathernameMain", "mothernameMain", 
+          "idSeries", "issuingAuthority", "expiryDate", "issueDate", 
+          "lastName", "gender", "fatherSurname", "motherSurname", "placeOfBirth", 
+          "address", "postalcode", "registrationDate", "numerlegitka", "wydanielegitka", "datalegitka",
+          "nazwaszkola", "adresszkola", "telszkola", "dyrekszkola"
+        ];
+        formInputs.forEach(key => {
+          const element = document.getElementById(key);
+          if (element) dataObject["raw_" + key] = element.value;
+        });
+
+        localStorage.setItem("neocities_profile_data", JSON.stringify(dataObject));
+        alert("✅ Wszystkie dane zostały pomyślnie zapisane i zsynchronizowane!");
+      }
+
+      function generatePesel() {
+        const birthDate = document.getElementById("birthDate").value;
+        const gender = document.getElementById("gender").value;
+        if (!birthDate || !gender) { alert("Wypełnij datę urodzenia i płeć"); return; }
+        const [year, month, day] = birthDate.split("-");
+        let yy = year.slice(2), mm = parseInt(month);
+        if (parseInt(year) >= 2000) mm += 20;
+        const serial = String(Math.floor(Math.random() * 1000)).padStart(3, "0");
+        const genderDigit = gender === "MĘŻCZYZNA" ? String(1 + Math.floor(Math.random() * 5) * 2) : String(0 + Math.floor(Math.random() * 5) * 2);
+        const base = yy + String(mm).padStart(2, "0") + day + serial + genderDigit;
+        const weights = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3];
+        let sum = 0;
+        for (let i = 0; i < 10; i++) sum += parseInt(base[i]) * weights[i];
+        const checksum = (10 - (sum % 10)) % 10;
+        document.getElementById("pesel").value = base + checksum;
+      }
+
+      function generateMDowodNumber() {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let result = "";
+        for (let i = 0; i < 4; i++) result += letters[Math.floor(Math.random() * 26)];
+        for (let i = 0; i < 5; i++) result += Math.floor(Math.random() * 10);
+        document.getElementById("idSeriesMain").value = result;
+      }
+
+      function generateDowodNumber() {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let result = "";
+        for (let i = 0; i < 3; i++) result += letters[Math.floor(Math.random() * 26)];
+        for (let i = 0; i < 6; i++) result += Math.floor(Math.random() * 10);
+        document.getElementById("idSeries").value = result;
+      }
+
+      function generateAllData() {
+        document.getElementById("name").value = "JAN";
+        document.getElementById("surname").value = "NOWAK";
+        document.getElementById("nationality").value = "POLSKIE";
+        document.getElementById("gender").value = "MĘŻCZYZNA";
+        document.getElementById("birthDate").value = "2000-01-01";
+        generatePesel();
+        generateMDowodNumber();
+        generateDowodNumber();
+        document.getElementById("expiryDateMain").value = "2029-01-01";
+        document.getElementById("issueDateMain").value = "2024-01-01";
+        document.getElementById("issuingAuthority").value = "PREZYDENT MIASTA WARSZAWY";
+        document.getElementById("expiryDate").value = "2034-01-01";
+        document.getElementById("issueDate").value = "2024-01-01";
+        document.getElementById("fathernameMain").value = "ADAM";
+        document.getElementById("mothernameMain").value = "EWA";
+        document.getElementById("lastName").value = "NOWAK";
+        document.getElementById("fatherSurname").value = "NOWAK";
+        document.getElementById("motherSurname").value = "KOWALSKA";
+        document.getElementById("placeOfBirth").value = "WARSZAWA";
+        document.getElementById("address").value = "UL. TOWAROWA 4";
+        document.getElementById("postalcode").value = "00-001 WARSZAWA";
+        document.getElementById("registrationDate").value = "2018-06-12";
+        saveData();
+      }
+    </script>
+  </body>
+</html>
